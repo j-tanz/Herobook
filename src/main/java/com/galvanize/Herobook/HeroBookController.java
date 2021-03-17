@@ -1,6 +1,8 @@
 package com.galvanize.Herobook;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,20 +15,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/heroBook")
 public class HeroBookController {
+    @Autowired
+    HerobookService herobookService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void addHero(@RequestBody HeroBook hero) {
-
+        this.herobookService.createHerobook(hero);
     }
 
-    @GetMapping
+    @GetMapping(produces= MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<HeroBook> getAllHeroes() {
-        return List.of(HeroBook.builder()
-                .heroName("Hulk")
-                .image("http://blah.com")
-                .specialPower("Rage")
-                .build());
+        return this.herobookService.findAllHeroes();
     }
 }

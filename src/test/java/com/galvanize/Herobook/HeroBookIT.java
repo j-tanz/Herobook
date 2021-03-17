@@ -24,7 +24,7 @@ public class HeroBookIT {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void addHero() throws Exception {
+    public void addHeroTest() throws Exception {
         HeroBook hero = HeroBook.builder()
                 .heroName("Hulk")
                 .image("http://blah.com")
@@ -42,5 +42,23 @@ public class HeroBookIT {
                 .andExpect(jsonPath("[0].heroName").value(hero.getHeroName()))
                 .andExpect(jsonPath("[0].image").value(hero.getImage()))
                 .andExpect(jsonPath("[0].specialPower").value(hero.getSpecialPower()));
+
+        HeroBook hero1 = HeroBook.builder()
+                .heroName("Batman")
+                .image("http://blah.com")
+                .specialPower("None")
+                .build();
+
+        mockMvc.perform(post("/heroBook")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(hero1))
+        )
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/heroBook"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("[1].heroName").value(hero1.getHeroName()))
+                .andExpect(jsonPath("[1].image").value(hero1.getImage()))
+                .andExpect(jsonPath("[1].specialPower").value(hero1.getSpecialPower()));
     }
 }
