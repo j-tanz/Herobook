@@ -90,5 +90,8 @@ public class HeroBookIT {
         mockMvc.perform(get("/heroBook/hero").queryParam("heroName","Batman"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.heroName").value(hero2.getHeroName()));
+
+        mockMvc.perform(get("/heroBook/hero").queryParam("heroName","I_DONT_EXIST"))
+                .andExpect(status().isNotFound());
     }
 }

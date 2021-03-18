@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -34,9 +35,16 @@ public class HeroBookController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "/hero")
     @ResponseStatus(HttpStatus.OK)
     public HeroBook getHeroByName(@RequestParam(name = "heroName") String heroName) {
-        return this.herobookService.findAllHeroes().stream().filter(hero ->
+        HeroBook result = this.herobookService.findAllHeroes().stream().filter(hero ->
                 hero.getHeroName().equals(heroName))
                 .findFirst()
                 .orElse(null);
+
+        if (result == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "That Hero Doesn't Exist"
+            );
+        }
+             return result;
     }
 }
