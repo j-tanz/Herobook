@@ -15,23 +15,11 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Entity
 @Builder
-public class HeroBook {
+public class HeroBook extends SuperHuman{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long heroId;
-    private String image;
-    private String realName;
     private String heroName;
-    private String height;
-    private String weight;
-    private String specialPower;
-    private String intelligence;
-    private String strength;
-    private String power;
-    private String speed;
-    private String agility;
-    private String description;
-    private String story;
 
     public HeroBook(String image, String realName, String heroName, String height, String weight, String specialPower, String intelligence, String strength, String power, String speed, String agility, String description, String story) {
         this.image = image;
