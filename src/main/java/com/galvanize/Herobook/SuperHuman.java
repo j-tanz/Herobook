@@ -1,14 +1,15 @@
 package com.galvanize.Herobook;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import javax.persistence.MappedSuperclass;
 
 @Data
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
-@Builder
+@MappedSuperclass
 public abstract class SuperHuman {
     protected String image;
     protected String realName;
@@ -22,5 +23,4 @@ public abstract class SuperHuman {
     protected String agility;
     protected String description;
     protected String story;
-
 }
