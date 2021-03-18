@@ -1,6 +1,7 @@
 package com.galvanize.Herobook;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +61,34 @@ public class HeroBookIT {
                 .andExpect(jsonPath("[1].heroName").value(hero1.getHeroName()))
                 .andExpect(jsonPath("[1].image").value(hero1.getImage()))
                 .andExpect(jsonPath("[1].specialPower").value(hero1.getSpecialPower()));
+    }
+
+    @Test
+    public void getHeroByNameTest() throws Exception {
+        HeroBook hero = HeroBook.builder()
+                .heroName("Hulk")
+                .image("http://blah.png")
+                .specialPower("Rage")
+                .build();
+
+        HeroBook hero2 = HeroBook.builder()
+                .heroName("Batman")
+                .image("http://batman.jpg")
+                .specialPower("I am Batman")
+                .build();
+
+        mockMvc.perform(post("/heroBook")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(hero))
+        ).andExpect(status().isCreated());
+
+        mockMvc.perform(post("/heroBook")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(hero2))
+        ).andExpect(status().isCreated());
+
+        mockMvc.perform(get("/heroBook/hero").queryParam("heroName","Batman"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.heroName").value(hero2.getHeroName()));
     }
 }
